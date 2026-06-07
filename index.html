@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoteStream Hub: Modern Revision Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind Config for custom theme colors & animations -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                            indigo: '#6366f1',
+                            violet: '#8b5cf6',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'loader-fill': 'loader-fill 2s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.95)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        'loader-fill': {
+                            '0%': { width: '0%' },
+                            '100%': { width: '100%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Space Grotesk & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS for specialized styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #030712;
+            overflow-x: hidden;
+        }
+        .font-title {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        /* Custom animated glassmorphism background */
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-panel:hover {
+            border-color: rgba(56, 189, 248, 0.2);
+            box-shadow: 0 0 30px rgba(14, 165, 233, 0.1);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+        /* Loader Text Shimmer Animation */
+        .text-shimmer {
+            background: linear-gradient(to right, #38bdf8, #8b5cf6, #c084fc, #38bdf8);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 2s linear infinite;
+        }
+        @keyframes shimmer {
+            to {
+                background-position: 200% center;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-200 selection:bg-brand-500 selection:text-white min-h-screen relative flex flex-col justify-between overflow-hidden">
+
+    <!-- Cinematic Loading Screen -->
+    <div id="loader-screen" class="fixed inset-0 z-[100] bg-[#030712] flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out">
+        <!-- Ambient background glows -->
+        <div class="absolute w-[400px] h-[400px] bg-brand-500/10 rounded-full blur-[100px] animate-pulse-slow pointer-events-none"></div>
+        
+        <div class="relative z-10 flex flex-col items-center gap-6">
+            <!-- Floating Animated Emblem -->
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-brand-500 to-brand-violet flex items-center justify-center text-white shadow-[0_0_50px_rgba(14,165,233,0.4)] animate-float">
+                <i class="fa-solid fa-graduation-cap text-4xl"></i>
+            </div>
+
+            <!-- Staggered Animated Text -->
+            <div class="text-center space-y-2 mt-4">
+                <h1 class="font-title text-4xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-md opacity-0 animate-[fade-in_0.8s_ease-out_0.2s_forwards]">
+                    STUDYBUDDY PRO
+                </h1>
+                <h2 class="font-title text-xl md:text-2xl font-bold tracking-[0.2em] text-shimmer opacity-0 animate-[fade-in_0.8s_ease-out_0.6s_forwards]">
+                    INTERACTIVE NOTES
+                </h2>
+            </div>
+
+            <!-- Smooth Progress Bar -->
+            <div class="w-64 h-1.5 bg-gray-800 rounded-full overflow-hidden mt-6 relative shadow-inner opacity-0 animate-[fade-in_0.8s_ease-out_1s_forwards]">
+                <div class="h-full bg-gradient-to-r from-brand-400 via-brand-violet to-brand-400 animate-loader-fill"></div>
+            </div>
+            
+            <p class="text-[10px] text-brand-400 font-semibold tracking-widest uppercase mt-3 animate-pulse opacity-0 animate-[fade-in_0.8s_ease-out_1.2s_forwards]">
+                Initializing Virtual Classroom...
+            </p>
+        </div>
+
+        <!-- Inline keyframes for loader specific fades -->
+        <style>
+            @keyframes fade-in {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        </style>
+    </div>
+
+    <!-- Decorative Ambient Lights -->
+    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-500/10 rounded-full blur-[120px] pointer-events-none -translate-x-1/2 -translate-y-1/2 animate-pulse-slow"></div>
+    <div class="absolute top-1/3 right-0 w-[400px] h-[400px] bg-brand-violet/10 rounded-full blur-[100px] pointer-events-none translate-x-1/3 animate-blob"></div>
+    <div class="absolute bottom-10 left-10 w-[300px] h-[300px] bg-brand-indigo/10 rounded-full blur-[80px] pointer-events-none"></div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-gray-800/80 px-6 py-4 shadow-2xl transition-all">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group" target="_blank" rel="noopener noreferrer">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-brand-violet flex items-center justify-center text-white shadow-lg shadow-brand-500/20 group-hover:rotate-6 transition-transform duration-300">
+                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                </div>
+                <div>
+                    <span class="font-title text-xl font-bold tracking-tight text-white group-hover:text-brand-400 transition-colors">STUDYBUDDY PRO: INTERACTIVE NOTES<span class="text-brand-500">Hub</span></span>
+                    <p class="text-[10px] text-gray-400 font-semibold tracking-widest uppercase">Classroom of Tomorrow</p>
+                </div>
+            </a>
+
+            <!-- Quick Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#dashboard" class="text-gray-300 hover:text-brand-400 transition-colors" target="_blank" rel="noopener noreferrer">Dashboard</a>
+                <a href="#roadmap" class="text-gray-300 hover:text-brand-400 transition-colors" target="_blank" rel="noopener noreferrer">Curriculum</a>
+                <a href="#features" class="text-gray-300 hover:text-brand-400 transition-colors" target="_blank" rel="noopener noreferrer">Interactive Tech</a>
+                <span class="px-2.5 py-0.5 bg-brand-500/10 border border-brand-500/20 rounded-full text-brand-400 text-xs font-semibold flex items-center gap-1.5 animate-pulse">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-400"></span> Active Session
+                </span>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-12 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left Side: Copy/Text Hero Context -->
+        <div class="lg:col-span-7 space-y-8">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-500/10 border border-brand-500/20 rounded-full text-brand-400 text-xs font-semibold">
+                <i class="fa-solid fa-circle-check"></i> Unlocked Notes Available Now!
+            </div>
+
+            <h1 class="font-title text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight text-white">
+                Study Better with <span class="bg-gradient-to-r from-brand-400 via-brand-violet to-purple-400 bg-clip-text text-transparent">Digital Notebooks</span>
+            </h1>
+
+            <p class="text-gray-400 text-base sm:text-lg leading-relaxed max-w-2xl">
+                Experience the warmth of a classmate's stellar study files combined with advanced web interactivity. Switch pen inks, toggle Active Recall masks to memorize, and simulate physical study desk setups in real-time.
+            </p>
+
+            <!-- Chapter Focus Card -->
+            <div class="glass-panel p-6 rounded-2xl border border-gray-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 text-xl">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-amber-400 tracking-wider uppercase">Active Chapter</span>
+                            <span class="text-[9px] font-bold bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded uppercase">BCA_NOTES</span>
+                        </div>
+                        <h3 class="font-title text-lg font-bold text-white">Chapter 1: The Internet</h3>
+                        <p class="text-xs text-gray-400 mt-0.5">Vint Cerf, ARPANET, DNS Queries, IP Routing, Cryptography & Security</p>
+                    </div>
+                </div>
+                
+                <!-- Gateway Action to Note Page -->
+                <a href="Internet.html" class="w-full sm:w-auto px-5 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-brand-500/10 hover:shadow-brand-500/30 flex items-center justify-center gap-2 group" target="_blank" rel="noopener noreferrer">
+                    <span>Open Notebook</span>
+                    <i class="fa-solid fa-circle-play group-hover:translate-x-0.5 transition-transform"></i>
+                </a>
+            </div>
+
+            <!-- Chapter 2 Focus Card -->
+            <div class="glass-panel p-6 rounded-2xl border border-gray-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 text-xl">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-amber-400 tracking-wider uppercase">Active Chapter</span>
+                            <span class="text-[9px] font-bold bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded uppercase">BCA_NOTES</span>
+                        </div>
+                        <h3 class="font-title text-lg font-bold text-white">Chapter 2: Mechanism Of Internet</h3>
+                        <p class="text-xs text-gray-400 mt-0.5">Role of Internet, Protocol, IP, DNS, Three pillars, Web link, URL</p>
+                    </div>
+                </div>
+                
+                <!-- Gateway Action to Note Page -->
+                <a href="Mechanism_of_internet.html" class="w-full sm:w-auto px-5 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-brand-500/10 hover:shadow-brand-500/30 flex items-center justify-center gap-2 group" target="_blank" rel="noopener noreferrer">
+                    <span>Open Notebook</span>
+                    <i class="fa-solid fa-circle-play group-hover:translate-x-0.5 transition-transform"></i>
+                </a>
+            </div>
+
+            <!-- Features Quick-List grid -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="flex items-start gap-3">
+                    <span class="text-brand-400 mt-1"><i class="fa-solid fa-feather-pointed"></i></span>
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-200">Real Ink Simulation</h4>
+                        <p class="text-xs text-gray-400">Toggle colors (Blue, Black, Violet).</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-brand-violet mt-1"><i class="fa-solid fa-brain"></i></span>
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-200">Active Recall Engine</h4>
+                        <p class="text-xs text-gray-400">Click & reveal key hidden formulas.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-emerald-400 mt-1"><i class="fa-solid fa-print"></i></span>
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-200">A4 Printable Format</h4>
+                        <p class="text-xs text-gray-400">Clean margins, perfect export scaling.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-amber-400 mt-1"><i class="fa-solid fa-pencil-ruler"></i></span>
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-200">Hand-Drawn Visuals</h4>
+                        <p class="text-xs text-gray-400">Vector flow diagrams & doodles.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Beautiful Interactive 3D Notebook Preview Card -->
+        <div class="lg:col-span-5 flex justify-center items-center" id="dashboard">
+            <div class="relative w-full max-w-[380px] group">
+                <!-- Outer Shadow/Glow -->
+                <div class="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-brand-violet/30 rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                <!-- 3D Card Container (Tilt script updates transform) -->
+                <div id="3d-card" class="relative glass-panel rounded-2xl border border-gray-800 overflow-hidden shadow-2xl p-6 transition-all duration-300 ease-out cursor-pointer hover:shadow-brand-500/10">
+                    
+                    <!-- Card Top Header -->
+                    <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-800">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                            <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                        </div>
+                        <span class="text-[10px] text-gray-500 tracking-wider uppercase font-semibold">Virtual Scan Preview</span>
+                    </div>
+
+                    <!-- Mini Notebook Mock Graphic -->
+                    <div class="bg-[#fcfcfa] rounded-lg border-l-8 border-[#cccabf] shadow-inner p-4 relative overflow-hidden h-[340px] text-zinc-800">
+                        <!-- Horizontal lines -->
+                        <div class="absolute inset-0 bg-[repeating-linear-gradient(transparent,transparent_13px,rgba(162,199,230,0.3)_13px,rgba(162,199,230,0.3)_14px)] pointer-events-none mt-10"></div>
+                        <!-- Vertical line -->
+                        <div class="absolute left-10 top-0 bottom-0 w-[1px] bg-red-300 pointer-events-none"></div>
+
+                        <!-- Mock Handwritten Content Header -->
+                        <div class="relative z-10 pl-6 pt-2">
+                            <span class="text-[9px] font-bold text-red-500 font-mono">Date: June 7, 2026</span>
+                            <h4 class="font-title text-base font-extrabold text-blue-900 tracking-tight leading-tight mt-1">
+                                The Internet Notes 📝
+                            </h4>
+                            <p class="text-[10px] text-zinc-600 mt-2 font-serif leading-relaxed">
+                                • Network of networks linked with wireless, optical & copper mediums.
+                            </p>
+                            <!-- Highlight example -->
+                            <p class="text-[10px] text-zinc-600 mt-1 font-serif leading-relaxed">
+                                • <span class="bg-yellow-200/95 px-1 rounded shadow-sm">Vint Cerf</span> is recognized as the "Father of the Internet".
+                            </p>
+
+                            <!-- Mini Doodle -->
+                            <div class="mt-4 flex justify-center">
+                                <svg width="100" height="60" class="text-blue-900 border border-dashed border-zinc-300 rounded p-1 bg-white/50">
+                                    <rect x="5" y="15" width="20" height="15" rx="1" fill="none" stroke="currentColor" stroke-width="1"/>
+                                    <line x1="15" y1="30" x2="15" y2="35" stroke="currentColor"/>
+                                    <line x1="10" y1="35" x2="20" y2="35" stroke="currentColor"/>
+                                    
+                                    <circle cx="50" cy="25" r="10" fill="none" stroke="currentColor"/>
+                                    
+                                    <line x1="25" y1="22" x2="40" y2="25" stroke="red" stroke-width="1" stroke-dasharray="2 1"/>
+                                    <line x1="60" y1="25" x2="75" y2="22" stroke="red" stroke-width="1" stroke-dasharray="2 1"/>
+                                    
+                                    <rect x="75" y="15" width="20" height="20" fill="none" stroke="currentColor"/>
+                                </svg>
+                            </div>
+
+                            <p class="text-[10px] text-zinc-600 mt-3 font-serif leading-relaxed">
+                                • Packets route <span class="border-b-2 border-red-500 border-dashed">dynamically</span> across pathways.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Note Features Grid Section -->
+    <section id="features" class="max-w-7xl mx-auto px-6 py-16 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            <!-- Graphic / Mock representation of interactive toolkit -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-2">
+                    <span class="text-blue-400 text-2xl"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                    <h4 class="font-title text-base font-bold text-white">Dynamic Ink</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">Instantly shifts notes' handwritten color variable from Navy Blue, Revision Black, to Sincere Violet.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-2">
+                    <span class="text-amber-400 text-2xl"><i class="fa-solid fa-brain"></i></span>
+                    <h4 class="font-title text-base font-bold text-white">Recall Blanks</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">Changes neon highlights into solid dark blocks. Tap individual words to recall hidden answers.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-2">
+                    <span class="text-violet-400 text-2xl"><i class="fa-solid fa-cube"></i></span>
+                    <h4 class="font-title text-base font-bold text-white">Real Scans</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">Simulates binder holes, margin shadows, paper curl effects, and natural angles for organic reading.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-2">
+                    <span class="text-emerald-400 text-2xl"><i class="fa-solid fa-cloud-arrow-down"></i></span>
+                    <h4 class="font-title text-base font-bold text-white">Print Perfect</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed">Clean scaling code adjusts A4 notebook margins to output premium printables on normal computer paper.</p>
+                </div>
+            </div>
+
+            <!-- Descriptive Text column -->
+            <div class="space-y-6">
+                <span class="text-brand-violet text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                    <span class="w-8 h-[2px] bg-brand-violet"></span> Educational Tech
+                </span>
+                <h2 class="font-title text-3xl sm:text-4xl font-extrabold text-white">Designed to Simulate Real Classroom Notebooks</h2>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Why read flat wiki-style pages when you can enjoy premium, visually structured, hand-drawn study assets? Research shows hand-framed diagrams and highlighters greatly boost cognitive retention during rigorous revision sessions.
+                </p>
+                
+                <div class="p-4 border-l-4 border-brand-500 bg-brand-500/5 rounded-r-xl">
+                    <p class="text-xs text-gray-300 italic">
+                        "The interactive notes matched BCA computer standards perfectly. Active recall blanks saved me hours of manual cue-card preparation!"
+                    </p>
+                    <span class="block text-[10px] font-bold text-brand-400 uppercase mt-2">— Sincere Classroom Topper</span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Feedbacks, Ratings, and Activity Feed -->
+    <section class="max-w-4xl mx-auto px-6 pb-16 relative z-10 w-full">
+        <div class="glass-panel p-8 rounded-2xl border border-gray-800">
+            <h3 class="font-title text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <span>💬</span> Platform Statistics & Feedback
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-8">
+                <div class="p-4 rounded-xl bg-gray-900/40">
+                    <div class="text-2xl font-black text-brand-400 font-title">4.9 / 5.0</div>
+                    <div class="text-[10px] text-gray-400 font-semibold uppercase mt-1">Study Guide Rating</div>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-900/40">
+                    <div class="text-2xl font-black text-brand-violet font-title">100% Vector</div>
+                    <div class="text-[10px] text-gray-400 font-semibold uppercase mt-1">Hand-drawn Assets</div>
+                </div>
+                <div class="p-4 rounded-xl bg-gray-900/40">
+                    <div class="text-2xl font-black text-emerald-400 font-title">Active Recall</div>
+                    <div class="text-[10px] text-gray-400 font-semibold uppercase mt-1">Built-in utility</div>
+                </div>
+            </div>
+
+            <!-- Interactive Comment/Reaction system -->
+            <div class="border-t border-gray-800 pt-6">
+                <h4 class="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3">Leave a quick reaction for your peers:</h4>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="addReaction('fire')" class="px-3 py-1.5 rounded-lg bg-gray-900 hover:bg-gray-800 border border-gray-800 text-xs text-gray-300 flex items-center gap-2 transition-colors">
+                        🔥 High Quality <span id="count-fire" class="text-[10px] font-bold text-brand-400 bg-brand-500/10 px-1.5 py-0.5 rounded">142</span>
+                    </button>
+                    <button onclick="addReaction('study')" class="px-3 py-1.5 rounded-lg bg-gray-900 hover:bg-gray-800 border border-gray-800 text-xs text-gray-300 flex items-center gap-2 transition-colors">
+                        🧠 Mind-blown <span id="count-study" class="text-[10px] font-bold text-brand-violet bg-brand-violet/10 px-1.5 py-0.5 rounded">98</span>
+                    </button>
+                    <button onclick="addReaction('perfect')" class="px-3 py-1.5 rounded-lg bg-gray-900 hover:bg-gray-800 border border-gray-800 text-xs text-gray-300 flex items-center gap-2 transition-colors">
+                        👌 Perfectly Accurate <span id="count-perfect" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">83</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-950 border-t border-gray-900 py-12 px-6 text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto space-y-4">
+            <div class="flex justify-center gap-6 text-gray-400 text-lg mb-4">
+                <a href="#" class="hover:text-brand-400 transition-colors" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="hover:text-brand-400 transition-colors" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i></a>
+                <a href="#" class="hover:text-brand-400 transition-colors" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+            <p>&copy; 2026 NoteStream Hub. Designed for BCA Computer Revision courses.</p>
+            <p class="text-[10px] text-gray-600">Simulated topper notes platform &bull; Dynamic high-fidelity rendering enabled.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive script handling loader, parallax preview tilts & reaction increments -->
+    <script>
+        // Handle loading screen
+        window.addEventListener('load', () => {
+            // Delay removing the loader to let the user see the beautiful animation
+            setTimeout(() => {
+                const loader = document.getElementById('loader-screen');
+                loader.style.opacity = '0'; // Trigger CSS transition
+                document.body.classList.remove('overflow-hidden'); // Enable scrolling
+                
+                // Remove from DOM after transition completes
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 1000); 
+            }, 2500); // 2.5 seconds minimum load time
+        });
+
+        // 3D Parallax effect on hover preview notebook card
+        const card3D = document.getElementById('3d-card');
+        
+        if (card3D) {
+            card3D.addEventListener('mousemove', (e) => {
+                const rect = card3D.getBoundingClientRect();
+                const x = e.clientX - rect.left; // x position within element
+                const y = e.clientY - rect.top;  // y position within element
+                
+                // Calculate percentage offsets
+                const xOffset = (x / rect.width - 0.5) * 20; // max 10 degrees tilt
+                const yOffset = (y / rect.height - 0.5) * -20;
+                
+                // Apply rotation style
+                card3D.style.transform = `perspective(1000px) rotateY(${xOffset}deg) rotateX(${yOffset}deg) scale(1.03)`;
+            });
+
+            card3D.addEventListener('mouseleave', () => {
+                // Reset card rotation smoothly
+                card3D.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1)`;
+            });
+        }
+
+        // Live reactions state counter incrementer
+        const reactionCounts = {
+            fire: 142,
+            study: 98,
+            perfect: 83
+        };
+
+        function addReaction(type) {
+            reactionCounts[type]++;
+            const labelEl = document.getElementById(`count-${type}`);
+            if (labelEl) {
+                labelEl.innerText = reactionCounts[type];
+                // Tiny bump effect animation
+                labelEl.parentElement.classList.add('scale-105', 'border-brand-400/50');
+                setTimeout(() => {
+                    labelEl.parentElement.classList.remove('scale-105', 'border-brand-400/50');
+                }, 150);
+            }
+        }
+    </script>
+</body>
+</html>
