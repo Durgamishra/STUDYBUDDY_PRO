@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Topper Study Notes: The Internet</title>
+    <!-- Tailwind CSS for layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for handwriting realism -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@400;700&family=Kalam:wght@300;400;700&family=Gochi_Hand&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ink-blue: #1c3d70;
+            --ink-black: #212529;
+            --ink-violet: #4a154b;
+            --ink-color: var(--ink-blue);
+            --red-pen: #c9183b;
+        }
+/* Premium Floating Glass Navbar */
+        header {
+            background: rgba(15, 23, 42, 0.35);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+/* Smooth Glass Effect */
+        .glass-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+/* Floating Navbar on Scroll */
+        header.scrolled {
+            background: rgba(2, 6, 23, 0.75);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+
+        body {
+            background-color: #121214;
+            color: #e4e4e7;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-image: radial-gradient(circle, #252529 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* Handwritten Styles */
+        .handwritten {
+            font-family: 'Kalam', cursive;
+            font-weight: 400;
+            color: var(--ink-color);
+            transition: color 0.3s ease;
+        }
+
+        .handwritten-bold {
+            font-family: 'Kalam', cursive;
+            font-weight: 700;
+            color: var(--ink-color);
+        }
+
+        .handwritten-sketchy {
+            font-family: 'Caveat', cursive;
+            font-weight: 700;
+            color: var(--red-pen);
+        }
+
+        .label-font {
+            font-family: 'Architects Daughter', cursive;
+            font-size: 0.85rem;
+            color: var(--ink-color);
+        }
+
+        /* 3D Realistic Notebook Sheet */
+        .notebook-outer {
+            perspective: 1500px;
+        }
+
+        .notebook-page {
+            width: 100%;
+            max-width: 820px;
+            aspect-ratio: 1 / 1.414; /* A4 Ratio */
+            background-color: #fdfdfa;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.5),
+                0 1px 3px rgba(0,0,0,0.2),
+                inset 0 0 40px rgba(0, 0, 0, 0.04);
+            border-radius: 4px 16px 16px 4px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-style: preserve-3d;
+            border-left: 12px solid #e0dfd5;
+        }
+
+        /* Notebook Ruled Lines */
+        .ruled-paper {
+            background-image: 
+                /* Red vertical margin */
+                linear-gradient(90deg, transparent 79px, rgba(196, 52, 52, 0.6) 79px, rgba(196, 52, 52, 0.6) 81px, transparent 81px),
+                /* Blue horizontal lines */
+                repeating-linear-gradient(transparent, transparent 27px, rgba(162, 199, 230, 0.5) 27px, rgba(162, 199, 230, 0.5) 28px);
+            background-size: 100% 100%, 100% 28px;
+            line-height: 28px;
+            padding: 56px 45px 56px 95px; /* Offset to line up perfectly */
+        }
+
+        /* Top margins & Binder Ring Holes */
+        .binder-holes {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 40px 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .binder-hole {
+            width: 12px;
+            height: 12px;
+            background-color: #121214;
+            border-radius: 50%;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.8), 1px 1px 1px rgba(255,255,255,0.1);
+        }
+
+        /* Yellow Highlighter Effect */
+        .highlight {
+            background: linear-gradient(104deg, rgba(254, 240, 138, 0.85) 0%, rgba(254, 240, 138, 0.95) 75%, rgba(254, 240, 138, 0.55) 100%);
+            border-radius: 5px 12px 4px 10px;
+            padding: 1px 6px 2px 4px;
+            margin: 0 -2px;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.03);
+            display: inline;
+            transition: background 0.3s ease;
+        }
+
+        .study-hide .highlight {
+            background: rgba(31, 41, 55, 0.95) !important;
+            color: rgba(31, 41, 55, 0.95) !important;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .study-hide .highlight::after {
+            content: " [Click to Reveal]";
+            font-family: sans-serif;
+            font-size: 0.65rem;
+            color: #3b82f6 !important;
+            letter-spacing: normal;
+        }
+
+        /* Red Pen Underline */
+        .red-underline {
+            border-bottom: 2px dashed var(--red-pen);
+            padding-bottom: 1px;
+        }
+
+        /* Hand-circled in Red Pen */
+        .red-circle {
+            position: relative;
+            z-index: 1;
+            padding: 1px 6px;
+        }
+
+        .red-circle::before {
+            content: "";
+            position: absolute;
+            left: -2px;
+            top: -1px;
+            right: -2px;
+            bottom: -3px;
+            border: 2px solid var(--red-pen);
+            border-radius: 52% 48% 55% 45% / 40% 60% 40% 60%;
+            transform: rotate(-1.5deg);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Margins adjustments to perfectly match line spacing */
+        .ruled-line-align {
+            margin-top: 4px; /* Tiny adjustment to dynamic baseline */
+        }
+
+        /* Slight scan page tilting */
+        .tilted-page-1 {
+            transform: rotate(-0.4deg) translate(-2px, 2px);
+        }
+        .tilted-page-2 {
+            transform: rotate(0.6deg) translate(3px, -1px);
+        }
+
+        /* Real desk paper curling shadow */
+        .paper-curl-shadow {
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.4),
+                inset 10px 0 20px rgba(0,0,0,0.02),
+                inset -10px 0 20px rgba(0,0,0,0.01);
+        }
+
+        .hand-drawn-box {
+            border: 2px solid var(--ink-color);
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-12">
+
+    <!-- Premium Navigation Bar -->
+    <!-- Premium Glassmorphism Navigation Bar -->
+<header
+    class="sticky top-0 z-50 px-6 py-4
+    bg-gradient-to-r
+    from-slate-950/50
+    via-slate-900/30
+    to-slate-950/50
+    backdrop-blur-2xl
+    border-b border-white/10
+    shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
+
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center
+                bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-500
+                shadow-lg shadow-indigo-500/20">
+                <span class="text-xl">📝</span>
+            </div>
+
+            <div>
+                <h1 class="text-lg md:text-xl font-bold text-white tracking-wide">
+                    STUDYBUDDY PRO
+                </h1>
+
+                <p class="text-xs text-zinc-400">
+                    Interactive Notes • Internet Fundamentals
+                </p>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-wrap items-center justify-center gap-3">
+
+            <!-- Active Recall -->
+            <button
+                onclick="toggleStudyMode()"
+                id="study-toggle"
+                class="px-4 py-2 rounded-xl
+                bg-yellow-500 text-zinc-950
+                hover:bg-yellow-400
+                font-bold text-sm
+                transition-all duration-300
+                shadow-lg">
+
+                💡 Active Recall: OFF
+            </button>
+
+            <!-- Page Switch -->
+            <div class="flex p-1 rounded-xl
+                bg-white/5
+                backdrop-blur-md
+                border border-white/10">
+
+                <button
+                    onclick="switchPage(1)"
+                    id="btn-p1"
+                    class="px-4 py-2 rounded-lg
+                    bg-white/10
+                    text-white
+                    text-sm font-semibold
+                    transition-all">
+
+                    Page 1
+                </button>
+
+                <button
+                    onclick="switchPage(2)"
+                    id="btn-p2"
+                    class="px-4 py-2 rounded-lg
+                    text-zinc-400
+                    hover:text-white
+                    text-sm font-semibold
+                    transition-all">
+
+                    Page 2
+                </button>
+            </div>
+
+            <!-- Scan Mode -->
+            <button
+                onclick="toggleScanLook()"
+                class="p-3 rounded-xl
+                bg-white/5
+                backdrop-blur-md
+                border border-white/10
+                text-zinc-300
+                hover:bg-white/10
+                transition-all">
+
+                🖨️
+            </button>
+
+        </div>
+    </div>
+    </header>
+    <main class="max-w-5xl mx-auto px-4 mt-8">
+        <!-- Interactive Study Deck Frame -->
+        <div class="flex justify-center items-center notebook-outer py-4">
+
+            <!-- PAGE 1 OF NOTES -->
+            <div id="page-1" class="notebook-page paper-curl-shadow tilted-page-1 block">
+                <!-- Binder Hole Visuals -->
+                <div class="binder-holes">
+                    <div class="binder-hole"></div>
+                    <div class="binder-hole"></div>
+                    <div class="binder-hole"></div>
+                    <div class="binder-hole"></div>
+                    <div class="binder-hole"></div>
+                    <div class="binder-hole"></div>
+                </div>
+
+                <!-- Hand-ruled Content Area -->
+                <div class="ruled-paper min-h-full">
+                    
+                    <!-- Top Page details -->
+                    <div class="flex justify-between border-b border-red-200 pb-1 mb-6 text-sm label-font">
+                        <span class="text-rose-500 font-bold">Topic: 01/05 - Intro to Nets</span>
+                        <span class="text-zinc-500">Date: June 7, 2026</span>
+                    </div>
+
+                    <!-- Page Title (Black ink style overrides default violet/blue sometimes, styled separately) -->
+                    <div class="text-center mb-8 relative">
+                        <h2 class="text-3xl font-bold handwritten tracking-wide inline-block relative px-4" style="color: var(--ink-black); transform: rotate(-1deg);">
+                            THE INTERNET: "Network of Networks"
+                            <!-- Wavy red under title -->
+                            <svg class="absolute bottom-[-12px] left-0 w-full h-3" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                <path d="M0,5 Q25,0 50,5 T100,5" fill="none" stroke="var(--red-pen)" stroke-width="2.5"></path>
+                            </svg>
+                        </h2>
+                    </div>
+
+                    <!-- Section Content -->
+                    <div class="handwritten text-[1.1rem] space-y-7 leading-[28px] ruled-line-align">
+                        
+                        <!-- Core Definition -->
+                        <div>
+                            <span class="handwritten-sketchy text-lg block" style="margin-bottom: -4px;">★ DEFINITION:</span>
+                            <p>
+                                The <span class="highlight">Internet</span> is the <span class="red-underline">global network of computers</span> connected to each other which communicate through a standardized set of protocols (TCP/IP).
+                            </p>
+                        </div>
+
+                        <!-- Founder Tip -->
+                        <div class="flex items-center gap-4 py-1">
+                            <div class="hand-drawn-box flex-1" style="border-color: var(--red-pen);">
+                                <span class="text-xs uppercase tracking-wider block font-bold" style="color: var(--red-pen);">Exam MCQ Key!</span>
+                                <p class="text-base">
+                                    <span class="red-circle"><span class="handwritten-bold">Vint Cerf</span></span> is widely recognized as the <span class="highlight">"Father of the Internet"</span>.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Scope Breakdown -->
+                        <div>
+                            <p>
+                                It compromises of <span class="highlight">private, public, academic, business,</span> and government networks spanning local to global scopes, all linked using electronic, wireless, and optical technologies.
+                            </p>
+                        </div>
+
+                        <!-- Services List -->
+                        <div>
+                            <span class="handwritten-bold block text-lg" style="color: var(--ink-black); margin-bottom: -4px;">🔑 Key Services Carried:</span>
+                            <ul class="list-none pl-6 space-y-1">
+                                <li>👉 <span class="red-underline">WWW (World Wide Web)</span>: Interlinked hypertext docs.</li>
+                                <li>👉 Electronic Mail (E-mail)</li>
+                                <li>👉 Discussion forums & Chat services</li>
+                                <li>👉 <span class="highlight">Internet Telephony (VoIP)</span> & Media Sharing</li>
+                            </ul>
+                        </div>
+
+                        <!-- Diagram 1 Area -->
+                        <div class="my-6 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                            <div>
+                                <span class="handwritten-sketchy text-base block">💡 Visualizing Data Transfer:</span>
+                                <p class="text-sm leading-5">
+                                    Information moves across the globe in tiny chunks called <span class="highlight">bits</span> over physical mediums!
+                                </p>
+                            </div>
+                            <!-- Inline SVG Hand drawn diagram -->
+                            <div class="bg-amber-50/60 p-2 border border-dashed border-amber-300 rounded-lg flex justify-center shadow-inner">
+                                <svg width="240" height="130" viewBox="0 0 240 130">
+                                    <!-- Desktop PC -->
+                                    <rect x="15" y="15" width="40" height="30" rx="3" fill="none" stroke="var(--ink-color)" stroke-width="2" stroke-dasharray="2 1"/>
+                                    <path d="M35,45 L35,55 M25,55 L45,55" stroke="var(--ink-color)" stroke-width="2"/>
+                                    <text x="18" y="34" class="label-font" style="font-size: 8px;">Client</text>
+                                    
+                                    <!-- Hand-drawn Cloud -->
+                                    <path d="M120,20 Q110,35 125,45 Q135,55 155,45 Q175,45 170,30 Q170,15 150,15 Q135,10 120,20 Z" fill="none" stroke="var(--ink-color)" stroke-width="2" />
+                                    <text x="132" y="34" class="label-font" style="font-size: 8px;">INTERNET</text>
+
+                                    <!-- Server Box -->
+                                    <rect x="180" y="70" width="45" height="40" rx="2" fill="none" stroke="var(--ink-color)" stroke-width="2"/>
+                                    <line x1="180" y1="83" x2="225" y2="83" stroke="var(--ink-color)" stroke-width="1" />
+                                    <line x1="180" y1="96" x2="225" y2="96" stroke="var(--ink-color)" stroke-width="1" />
+                                    <circle cx="190" cy="77" r="2" fill="var(--ink-color)"/>
+                                    <circle cx="190" cy="90" r="2" fill="var(--ink-color)"/>
+                                    <text x="198" y="106" class="label-font" style="font-size: 8px;">Server</text>
+
+                                    <!-- Hand-drawn Connection lines (wavy/imperfect) -->
+                                    <path d="M55,30 Q90,15 120,30" fill="none" stroke="var(--red-pen)" stroke-width="1.5" stroke-dasharray="4 2"/>
+                                    <path d="M150,45 Q165,70 180,80" fill="none" stroke="var(--red-pen)" stroke-width="1.5" stroke-dasharray="4 2"/>
+                                    
+                                    <!-- Small doodle arrow -->
+                                    <path d="M110,23 L115,28 M110,23 L118,21" stroke="var(--red-pen)" stroke-width="1.5"/>
+                                    
+                                    <text x="50" y="80" class="label-font text-rose-600" style="font-size: 9px; fill: var(--red-pen);">Fiber & Wireless</text>
+                                    <text x="50" y="95" class="label-font text-rose-600" style="font-size: 9px; fill: var(--red-pen);">Mediums ⚡</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Origins & DARPA -->
+                        <div>
+                            <span class="handwritten-sketchy text-lg block" style="margin-bottom: -4px;">🕰️ HISTORICAL ORIGINS:</span>
+                            <p>
+                                Born out of research in <span class="red-circle"><span class="handwritten-bold">1970s</span></span> commissioned by <span class="highlight">DARPA</span> (Defense Advanced Research Projects Agency, USA). Early prototype: <span class="red-underline">ARPANET</span> which pioneered packet switching technology.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Marginalia / Sticky note style bottom right -->
+                    <div class="absolute bottom-6 right-8 w-44 p-2 bg-yellow-100 border-l-4 border-yellow-400 rotate-2 shadow-md hidden md:block">
+                        <span class="font-bold text-xs text-yellow-800 block label-font">💡 Quick Memory Trick:</span>
+                        <span class="text-xs text-zinc-800 font-medium label-font">"Vint Cerf" sounds like "Surfing" the web. He is the Surf Father!</span>
+                    </div>
+
+                    <!-- Footer Page Counter -->
+                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 label-font text-zinc-400 font-bold">
+                        - 1 -
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- PAGE 2 OF NOTES -->
+            <div id="page-2" class="notebook-page paper-curl-shadow tilted-page-2 hidden">
+                <!-- Binder Hole Visuals -->
+                <div class="binder-holes">
+                    <div class="binder-hole"></div>
+                    <div class="binder-hole"></div>
+                    <div class="binder-hole"></div>
+                    <div class="binder-hole"></div>
+                    <div class="binder-hole"></div>
+                    <div class="binder-hole"></div>
+                </div>
+
+                <!-- Hand-ruled Content Area -->
+                <div class="ruled-paper min-h-full">
+                    
+                    <!-- Top Page details -->
+                    <div class="flex justify-between border-b border-red-200 pb-1 mb-6 text-sm label-font">
+                        <span class="text-rose-500 font-bold">Topic: 02/05 - Protocols & Security</span>
+                        <span class="text-zinc-500">Date: June 7, 2026</span>
+                    </div>
+
+                    <!-- Page Title -->
+                    <div class="text-center mb-6 relative">
+                        <h2 class="text-3xl font-bold handwritten tracking-wide inline-block relative px-4" style="color: var(--ink-black); transform: rotate(0.5deg);">
+                            PROTOCOLS, ROUTING & SECURITY
+                            <!-- Wavy red under title -->
+                            <svg class="absolute bottom-[-10px] left-0 w-full h-3" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                <path d="M0,3 Q30,6 60,3 T100,6" fill="none" stroke="var(--red-pen)" stroke-width="2.2"></path>
+                            </svg>
+                        </h2>
+                    </div>
+
+                    <!-- Page 2 Handwritten Content -->
+                    <div class="handwritten text-[1.1rem] space-y-7 leading-[28px] ruled-line-align">
+                        
+                        <!-- IP Addresses & DNS -->
+                        <div>
+                            <span class="handwritten-bold text-lg block" style="color: var(--ink-black); margin-bottom: -4px;">🌐 1. IP Addresses & DNS (The Phonebook):</span>
+                            <ul class="list-none pl-4 space-y-2">
+                                <li>
+                                    • <span class="highlight">IP Address</span> (Internet Protocol): A unique numerical label assigned to every device on a network. (e.g., IPv4 or IPv6)
+                                </li>
+                                <li>
+                                    • <span class="highlight">DNS (Domain Name System)</span>: Acts as the <span class="red-underline">Internet's phone book</span>. It converts human-friendly domain names (like <code class="bg-zinc-100 text-sm px-1 rounded text-red-600">google.com</code>) to machine IP Addresses.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- DNS Diagram Sketch -->
+                        <div class="my-4 flex justify-center">
+                            <div class="bg-blue-50/50 p-2 border border-blue-200 rounded-lg max-w-md w-full">
+                                <div class="text-center label-font text-xs text-blue-800 font-bold mb-1">Simple DNS Query Loop:</div>
+                                <svg width="340" height="90" viewBox="0 0 340 90" class="mx-auto">
+                                    <!-- Client -->
+                                    <rect x="10" y="25" width="55" height="35" rx="3" fill="none" stroke="var(--ink-color)" stroke-width="1.5"/>
+                                    <text x="18" y="46" class="label-font" style="font-size: 9px;">Browser</text>
+                                    
+                                    <!-- Request Arrows -->
+                                    <path d="M75,30 L145,15" fill="none" stroke="var(--red-pen)" stroke-width="1.5" stroke-dasharray="3 2" />
+                                    <text x="80" y="20" class="label-font" style="font-size: 7px; fill: var(--red-pen);">1. "What's google.com?"</text>
+
+                                    <!-- DNS Server -->
+                                    <rect x="155" y="5" width="60" height="30" rx="2" fill="none" stroke="var(--ink-color)" stroke-width="1.5"/>
+                                    <text x="165" y="23" class="label-font" style="font-size: 9px;">DNS Server</text>
+
+                                    <path d="M150,25 L75,40" fill="none" stroke="var(--ink-color)" stroke-width="1.5"/>
+                                    <text x="80" y="47" class="label-font" style="font-size: 7px; fill: var(--ink-color);">2. "IP is 142.250..."</text>
+
+                                    <!-- Web Server -->
+                                    <rect x="270" y="45" width="60" height="35" rx="2" fill="none" stroke="var(--ink-color)" stroke-width="1.5"/>
+                                    <text x="275" y="66" class="label-font" style="font-size: 9px;">Web Server</text>
+
+                                    <!-- Final Connection -->
+                                    <path d="M75,50 L260,65" fill="none" stroke="var(--red-pen)" stroke-width="1.5"/>
+                                    <text x="110" y="74" class="label-font" style="font-size: 8px; fill: var(--red-pen);">3. Secure Connect!</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Packets & Routing -->
+                        <div>
+                            <span class="handwritten-bold text-lg block" style="color: var(--ink-black); margin-bottom: -4px;">📦 2. Packets, Routing, and Reliability:</span>
+                            <p>
+                                Data is broken down into small blocks called <span class="highlight">Packets</span>. They do NOT travel on a fixed line. Instead, routers direct each packet along the <span class="red-underline">fastest, most dynamic paths</span> available. If a path is blocked, packets route dynamically elsewhere.
+                            </p>
+                        </div>
+
+                        <!-- HTTP and HTML -->
+                        <div>
+                            <span class="handwritten-bold text-lg block" style="color: var(--ink-black); margin-bottom: -4px;">🌐 3. HTTP & HTML:</span>
+                            <p>
+                                <span class="highlight">HTTP</span> (Hypertext Transfer Protocol) is the ruleset for fetching web files. HTML dictates how they look on your screen.
+                            </p>
+                        </div>
+
+                        <!-- Encryption & Cybersecurity -->
+                        <div>
+                            <span class="handwritten-bold text-lg block" style="color: var(--ink-black); margin-bottom: -4px;">🔒 4. Cryptography & Cybersecurity:</span>
+                            <p>
+                                To block intruders, communication is secured using <span class="red-underline">Cryptography</span>. Major layer: <span class="highlight">SSL/TLS</span> which displays as HTTPS (padlock icon in browser). Uses public and private keys to guarantee secure, encrypted transactions.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Marginalia Checklist on Left/Bottom -->
+                    <div class="absolute bottom-6 left-24 p-2 border border-dashed border-rose-400 bg-rose-50 rounded rotate-1 hidden md:block max-w-xs">
+                        <span class="font-bold text-xs text-rose-800 block label-font">🎯 Exam Prep Check:</span>
+                        <ul class="text-[11px] text-zinc-800 font-semibold label-font list-disc pl-3">
+                            <li>Define DNS vs IP Address.</li>
+                            <li>Differentiate HTTP vs HTTPS.</li>
+                            <li>Why do packets take dynamic paths?</li>
+                        </ul>
+                    </div>
+
+                    <!-- Footer Page Counter -->
+                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 label-font text-zinc-400 font-bold">
+                        - 2 -
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Interactive Workspace panel at the bottom -->
+    <section class="max-w-4xl mx-auto px-4 mt-8">
+        <div class="bg-zinc-900 rounded-xl p-6 border border-zinc-800 shadow-2xl">
+            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                <span>🛠️</span> Study Tools Panel
+            </h3>
+            <p class="text-zinc-400 text-sm mb-6">
+                Use these dynamic revision utilities to challenge yourself on the content written in the handwritten notes above.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Download/Print Center -->
+                <div class="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+                    <h4 class="text-sm font-bold text-purple-400 mb-1">Export/Print Engine</h4>
+                    <p class="text-xs text-zinc-300 leading-relaxed mb-4">
+                        Print these notes perfectly as high-resolution mock physical revision sheets on standard A4 paper.
+                    </p>
+                    <button onclick="window.print()" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded font-semibold text-xs transition-colors">
+                        🖨️ Print/Save as PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center text-xs text-zinc-600 mt-12 pb-6">
+        Designed to simulate hand-written topper notes with ultra-realistic layout properties. Custom vector doodles by interactive canvas systems.
+    </footer>
+
+    <!-- Interactive script handling transitions & page turns -->
+    <script>
+        window.addEventListener('scroll', () => {
+    const header = document.querySelector('header');
+
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+});
+        let currentInk = 'blue';
+        let studyModeActive = false;
+        let isScanMode = false;
+
+        function setInk(color) {
+            currentInk = color;
+            const root = document.documentElement;
+            
+            // Adjust CSS variable for ink ink colors
+            if (color === 'blue') {
+                root.style.setProperty('--ink-color', '#1c3d70');
+            } else if (color === 'black') {
+                root.style.setProperty('--ink-color', '#212529');
+            } else if (color === 'violet') {
+                root.style.setProperty('--ink-color', '#4a154b');
+            }
+
+            // Update UI buttons active state
+            const buttons = ['blue', 'black', 'violet'];
+            buttons.forEach(btn => {
+                const el = document.getElementById(`btn-ink-${btn}`);
+                if (btn === color) {
+                    el.classList.add('scale-110', 'border-white');
+                    el.classList.remove('border-zinc-600');
+                } else {
+                    el.classList.remove('scale-110', 'border-white');
+                    el.classList.add('border-zinc-600');
+                }
+            });
+        }
+
+        function switchPage(pageNum) {
+            const p1 = document.getElementById('page-1');
+            const p2 = document.getElementById('page-2');
+            const btnP1 = document.getElementById('btn-p1');
+            const btnP2 = document.getElementById('btn-p2');
+
+            if (pageNum === 1) {
+                p1.classList.remove('hidden');
+                p1.classList.add('block');
+                p2.classList.add('hidden');
+                p2.classList.remove('block');
+
+                btnP1.classList.add('bg-zinc-700', 'text-white');
+                btnP1.classList.remove('text-zinc-400');
+                btnP2.classList.remove('bg-zinc-700', 'text-white');
+                btnP2.classList.add('text-zinc-400');
+            } else {
+                p2.classList.remove('hidden');
+                p2.classList.add('block');
+                p1.classList.add('hidden');
+                p1.classList.remove('block');
+
+                btnP2.classList.add('bg-zinc-700', 'text-white');
+                btnP2.classList.remove('text-zinc-400');
+                btnP1.classList.remove('bg-zinc-700', 'text-white');
+                btnP1.classList.add('text-zinc-400');
+            }
+        }
+
+        function toggleStudyMode() {
+            studyModeActive = !studyModeActive;
+            const containerP1 = document.getElementById('page-1');
+            const containerP2 = document.getElementById('page-2');
+            const btn = document.getElementById('study-toggle');
+
+            if (studyModeActive) {
+                containerP1.classList.add('study-hide');
+                containerP2.classList.add('study-hide');
+                btn.innerHTML = "💡 Active Recall Mode: ON";
+                btn.classList.add('bg-green-500', 'hover:bg-green-400');
+                btn.classList.remove('bg-yellow-500', 'hover:bg-yellow-400');
+            } else {
+                containerP1.classList.remove('study-hide');
+                containerP2.classList.remove('study-hide');
+                btn.innerHTML = "💡 Active Recall Mode: OFF";
+                btn.classList.remove('bg-green-500', 'hover:bg-green-400');
+                btn.classList.add('bg-yellow-500', 'hover:bg-yellow-400');
+            }
+        }
+
+        // Allow clicking individual highlights to temporarily reveal them in study mode
+        document.addEventListener('click', function(e) {
+            if (studyModeActive && e.target.classList.contains('highlight')) {
+                e.target.style.background = 'rgba(254, 240, 138, 0.9)';
+                e.target.style.color = 'inherit';
+            }
+        });
+
+        function toggleScanLook() {
+            isScanMode = !isScanMode;
+            const pages = document.querySelectorAll('.notebook-page');
+            
+            pages.forEach((page, i) => {
+                if (isScanMode) {
+                    // Remove tilts and make perfectly flat
+                    page.classList.remove('tilted-page-1', 'tilted-page-2', 'paper-curl-shadow');
+                    page.style.transform = 'none';
+                    page.style.borderRadius = '0px';
+                } else {
+                    // Restore natural scan paper characteristics
+                    page.style.borderRadius = '';
+                    if (i === 0) {
+                        page.classList.add('tilted-page-1', 'paper-curl-shadow');
+                    } else {
+                        page.classList.add('tilted-page-2', 'paper-curl-shadow');
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
